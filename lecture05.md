@@ -17,7 +17,6 @@
 - active storageに使用する方法も現在挑戦中。
 ![ec2-s3](./image/ec2-s3.png)
 
-# 構成図に書き起こす
-![kouseizu](./image/kouseizu.png)
-
+# 構成図に書き起こす(訂正版）
+![kouseizu](./image/kouseizu-2.png)
 
