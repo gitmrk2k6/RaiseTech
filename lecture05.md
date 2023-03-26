@@ -18,5 +18,5 @@
 ![ec2-s3](./image/ec2-s3.png)
 
 # 構成図に書き起こす(訂正版）
-![kouseizu](./image/kouseizu-2.png)
+![kouseizu](./image/kouseizu-3.png)
 
