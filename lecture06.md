@@ -28,4 +28,8 @@ https://calculator.aws/#/estimate?id=606fcc1c006e3ed3e48af83ec9ed44572bea27ec
 無料枠で収まっていない。
 ![ec2-billing](./image6/ec2-billing.png)
 
+## メール通知（alerm→OK)を追加
+![alert](./image6/alertok.png)
+
+
 
