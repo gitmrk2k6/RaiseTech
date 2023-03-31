@@ -1,6 +1,6 @@
 ## 脆弱と対策
 - セキュリティー関連のサービスの未使用
-　 →様々な脆弱性管理サービスや認証許可を容易にするサービスが展開されているので、それらを理解し適正に組み合わせて、リスクを抑えたシステムを作る
+　 →様々な脆弱性管理サービスや認証許可を容易にするサービスが展開されているので、それらを理解し適正に組み合わせて、リスクを抑えたシステムを作る。
 　　（例）WAF、Shield、Key Management Service、Secrets Manager、Inspector、GuardDuty、Security Hub 　etc
 - AdministratorAccess権限のIAM ユーザーを使用している。
 　 →必要な権限のみを与えるようにする。
