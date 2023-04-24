@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: RDS-template
+Parameters:
+  DBMasterUserPassword:
+    Default: aKNDuyoKnb3KVwwBPaT7
+    Type: String
+    NoEcho: true
+
+Resources:
+# RDSの作成
+  RDS:
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: raisetech-lecture10-rds   # インスタンス識別子
+      DBInstanceClass: db.t2.micro
+      Engine: mysql
+      EngineVersion: 8.0.32
+      MasterUsername: admin
+      MasterUserPassword: !Ref DBMasterUserPassword
+      DBName: raisetech_live8_sample_app_development
+      BackupRetentionPeriod: 1    # 自動バックアップ
+      MultiAZ: false
+      PubliclyAccessible: false
+      StorageType: gp2
+      AllocatedStorage: 20
+      StorageEncrypted: false  # 暗号化するか
+      CopyTagsToSnapshot: false  # スナップショットを作成するか
+      DeletionProtection: false  # 削除保護
+      DeleteAutomatedBackups: true  # RDS削除に生成されるスナップショットの自動削除を有効化
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      VPCSecurityGroups:
+      - !Ref sgrds
+      Tags:
+      - Key: Name
+        Value: raisetech-lecture10-rds
+
+# RDSセキュリティーグループの作成
+  sgrds:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: raisetech-lecture10-sg-rds
+      GroupDescription: sgrds
+      VpcId: !ImportValue rasetech-lecture10-vpc-id
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !ImportValue raisetech-lecture10-sg-ec2-id   # ec2セキュリティーグループ（送信元に先述のEC2インスタンス用セキュリティグループを指定することで、EC2インスタンスからのアクセスのみを許可する）
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-sg-rds
+
+# サブネットグループの作成
+  RDSSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: dedicated to cloudformationRDS
+      DBSubnetGroupName: rds-subnetgroup
+      SubnetIds:
+      - !ImportValue raisetech-lecture10-privateSubnet1a-id
+      - !ImportValue raisetech-lecture10-privateSubnet1c-id
+      Tags:
+      - Key: Name
+        Value: raisetech-lecture10-rds-subnet-group
+
+Outputs:
+    RDSoutput:
+        Value: !Ref RDS
+        Export:
+          Name: rasetech-lecture10-rds-id
+    sgrdsoutput:
+        Value: !Ref sgrds
+        Export:
+          Name: raisetech-lecture10-sg-rds-id
+    RDSSubnetGroupoutput:
+        Value: !Ref RDSSubnetGroup
+        Export:
+          Name: raisetech-lecture10-subnetgroup-id
+    
