@@ -1,0 +1,202 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: VPC-template
+
+Resources:
+#VPCの作成
+  VPC:
+    Type: AWS::EC2::VPC
+    #VPCやSubnetなど「VPC」の画面にまとめられているリソースは全て「EC2」のリソースのため。AWSでEC2がVPCを作成。      
+    Properties:
+        CidrBlock: 10.0.0.0/16
+        EnableDnsSupport: true
+    #VPVに対してDNS解決を有効化。インスタンス作成時にグローバルIPアドレスがランダムで割り当てられる。
+        EnableDnsHostnames: true
+    #DNSホスト名を有効化。
+        InstanceTenancy: default
+    #インスタンスを共有ホストに配置（デフォルト）
+        Tags:
+          - Key: Name
+            Value: raisetech-lecture10-vpc
+
+# IGWの作成とアタッチ
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-igw
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+    # 本来は一意のVpcIdを記述する必要があるが、まだリソースが作成されていないため、VpcIdやIGWIdを指定することができない。よって!Refでリソース作成前のパラメータを参照するように設定。
+    # !Ref 指定したパラメータやリソースを取得するのに使う。パラメータでは設定された値が、リソースではリソース宣言の戻り値を返す (大抵はリソースの物理ID)
+
+# バブリックサブネット作成
+  PublicSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Sub ${AWS::Region}a
+      # ap-northeast-1aと書くとハードコードするなと言われた。
+      CidrBlock: 10.0.0.0/20
+      MapPublicIpOnLaunch: true
+      # このサブネットで起動されたインスタンスが起動時にパブリックIPアドレスを設定するか。
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-public-subnet1a
+
+  PublicSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Sub ${AWS::Region}c
+      CidrBlock: 10.0.16.0/20
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-public-subnet1c
+
+# プライベートサブネット作成
+  PrivateSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Sub ${AWS::Region}a
+      CidrBlock: 10.0.128.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-private-subnet1a
+
+  PrivateSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Sub ${AWS::Region}c
+      CidrBlock: 10.0.144.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-private-subnet1c
+
+# メインルートテーブルはVPC作成時に自動的に作成されるため、メインが1つ必ずある。それぞれパブリックはIGW、プラベートはVPCエンドポイント、S3へのルートテーブルを作成。
+
+# パブリックサブネット用のルートテーブル作成
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-public-rtb
+# バブリックサブネットのルートテーブル設定　IGWを許可
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+# プライベートサブネット用のルートテーブル作成
+  PrivateRouteTable :
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: raisetech-lecture10-private-rtb
+# プライベートサブネットは今はローカルのみなので記述なし（後にS3につなぐVPCエンドポイントの設定をする？？）
+# VPCエンドポイント（ゲートウェイエンドポイント）：VPCのルートテーブル(ルーティング設定)を書き換えてのゲートウェイ経由でサービスへアクセス.最初に出たエンドポイントで、S3とDynamoDBのみが対応。
+
+# パブリックサブネットとルートテーブルの関連付け
+  PublicSubnet1aRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1a
+
+  PublicSubnet1cRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1c
+
+# プライベートサブネットとルートテーブルの関連付け
+  PrivateSubnet1aRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet1a
+
+  PrivateSubnet1cRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet1c
+
+#出力 スタック内のリソースIDを他のスタックから呼び出し可能にする。 ImportValueを使用する。
+Outputs:
+    VPCoutput:
+        Value: !Ref VPC
+        Export:
+          Name: rasetech-lecture10-vpc-id
+    PublicSubnet1aOutput:
+        Value: !Ref PublicSubnet1a
+        Export:
+            Name: raisetech-lecture10-publicSubnet1a-id
+    PublicSubnet1cOutput:
+        Value: !Ref PublicSubnet1c
+        Export:
+            Name: raisetech-lecture10-publicSubnet1c-id
+    PrivateSubnet1aOutput:
+        Value: !Ref PrivateSubnet1a
+        Export:
+            Name: raisetech-lecture10-privateSubnet1a-id
+    PrivateSubnet1cOutput:
+        Value: !Ref PrivateSubnet1c
+        Export:
+            Name: raisetech-lecture10-privateSubnet1c-id
+    PublicRouteTableOutput:
+        Value: !Ref PublicRouteTable
+        Export:
+            Name: raisetech-lecture10-PublicRouteTable-id
+    PrivateRouteTableOutput:
+        Value: !Ref PrivateRouteTable
+        Export:
+            Name: raisetech-lecture10-PrivateRouteTable-id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
