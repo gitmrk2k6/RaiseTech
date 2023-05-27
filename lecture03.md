@@ -1,20 +1,20 @@
 ## 第3回課題提出
 
 # アプリケーションの起動
-![kidou](./image/app.png)
+![kidou](./images/app.png)
 
 
 # apサーバーについて
 - puma version 5.6.5
 - サーバーの停止後はアクセス不可
-![ap](./image/puma-ap-sv.png)
+![ap](./images/puma-ap-sv.png)
 
 
 # dbサーバーについて
 - mysql Ver 8.0.32
 - サーバ終了後はアクセス不可
-![db](./image/mysqldb.png)
-![miss](./image/sql-err.png)
+![db](./images/mysqldb.png)
+![miss](./images/sql-err.png)
 
 
 # railsの構成管理ツール
