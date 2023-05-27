@@ -3,7 +3,7 @@
 - ServerSpecをインストール
 - serverspec-initコマンドを使ったテストスクリプトの作成
 
-![init](./image11/serverspec-init.png)
+![init](./images/serverspec-init.png)
 
 - sample_spec.rbを設定
 
@@ -40,7 +40,7 @@ end
 
 - テスト成功
 
-![test](./image11/serverspec.png)
+![test](./images/serverspec.png)
 
 - 感想
 
