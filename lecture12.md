@@ -18,12 +18,12 @@
 
 8.Lecture12にcloudformationという名前のフォルダを作成し、中に第10回で作成したymlファイルを入れる
 config.ymlを与えられたサンプルコンフィグに書き換える
-![config](./image12/sample-config.png)
+![config](./images/sample-config.png)
 
 9.それぞれ追加変更したファイル等をadd.commit.push
 
 10.CircleCIでテストが成功し、正しく作動していることを確認
-![circleci](./image12/circleci.png)
+![circleci](./images/circleci.png)
 
 ## 感想など
 - Cloudformationの中にymlファイル以外が入っているとエラーになる？？ようで気がつくまでに時間がかかった

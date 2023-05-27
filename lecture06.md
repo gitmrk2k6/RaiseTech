@@ -11,25 +11,25 @@
 ## CloudWatchアラームを使ってALBのメール通知
 - unhealthy
 
-![unhealthy](./image6/unhealthy.png)
-![unhealthy-email](./image6/unhealthy-email.png)
+![unhealthy](./images/unhealthy.png)
+![unhealthy-email](./images/unhealthy-email.png)
 
 - healthy
  
-![healthy](./image6/healthy.png)
-![healthy-email](./image6/healthy-email.png)
+![healthy](./images/healthy.png)
+![healthy-email](./images/healthy-email.png)
 
 ## AWS利用料の見積もり
 https://calculator.aws/#/estimate?id=606fcc1c006e3ed3e48af83ec9ed44572bea27ec
 
 ## 現在の利用料
-![billing](./image6/billing.png)
+![billing](./images/billing.png)
 - EC2の料金. 
 無料枠で収まっていない。
-![ec2-billing](./image6/ec2-billing.png)
+![ec2-billing](./images/ec2-billing.png)
 
 ## メール通知（alerm→OK)を追加
-![alert](./image6/alertok.png)
+![alert](./images/alertok.png)
 
 
 

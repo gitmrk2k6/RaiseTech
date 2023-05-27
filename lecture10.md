@@ -1,28 +1,28 @@
 # 第10回課題提出
 ## CloudFormationを利用して現在までに作った環境のコード化し、環境が自動で作られているか確認. 
 - スタック
-![stack](./image10/stack.png)
+![stack](./images/stack.png)
 
 - VPC
-![vpc](./image10/cfn-vpc.png)
+![vpc](./images/cfn-vpc.png)
 
 - ルートテーブル
-![rt](./image10/cfn-rt.png)
+![rt](./images/cfn-rt.png)
 
 - EC2
-![ec2](./image10/cfn-ec2.png)
+![ec2](./images/cfn-ec2.png)
 
 - セキュリティーグループ
-![sg](./image10/cfn-sg.png)
+![sg](./images/cfn-sg.png)
 
 - ロードバランサー
-![alb](./image10/cfn-alb.png)
+![alb](./images/cfn-alb.png)
 
 - RDS
-![rds](./image10/cfn-rds.png)
+![rds](./images/cfn-rds.png)
 
 - S3
-![s3](./image10/cfn-s3.png)
+![s3](./images/cfn-s3.png)
 
 ## 感想
 組み込み関数があまり理解できていない。さまざまな記事でコードを調べていると組込み関数を使った複雑な書き方があり、理解が難しかったため、とりあえず!Ref,!SUbを所々で使う程度で作成した。  
