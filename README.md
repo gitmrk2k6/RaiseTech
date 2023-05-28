@@ -1,2 +1,2 @@
-# raisetech
-Raisetechの課題提出リポジトリ
+# RaiseTech
+RaiseTech課題提出用リポジトリ
