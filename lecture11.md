@@ -1,5 +1,7 @@
 # 第11回課題提出
+
 ## ServerSpecのテストを成功させる
+
 - ServerSpecをインストール
 - serverspec-initコマンドを使ったテストスクリプトの作成
 
@@ -7,11 +9,8 @@
 
 - sample_spec.rbを設定
 
-Nginxがインストール済であること. 
-
-
-指定のポートがリッスン（通信待ち受け状態）であること
-
+Nginxがインストール済であること  
+指定のポートがリッスン（通信待ち受け状態）であること  
 
 テスト接続して動作すること
 
@@ -22,7 +21,7 @@ listen_port = 80
 describe package('nginx') do
 
 it { should be_installed }
- 
+
 end
 
 describe port(listen_port) do
@@ -35,13 +34,12 @@ describe command('curl http://127.0.0.1:#{listen_port}/_plugin/head/ -o /dev/nul
 
 its(:stdout) { should match /^200$/ }
 
-
 end
 
 - テスト成功
 
 ![test](./images/serverspec.png)
 
-- 感想
+## 感想
 
 今回は、与えていただいたサンプルテストコードのみを実行したが、様々なテスト方法があるようなので今後考えて使っていけるようにしたい。
