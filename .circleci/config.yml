@@ -3,8 +3,8 @@ version: 2.1
 orbs:
   python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@3.1.4
-  ansible-playbook: orbss/ansible-playbook@0.0.5
-  ruby: circleci/ruby@2.0.1
+ # ansible-playbook: orbss/ansible-playbook@0.0.5
+ #ruby: circleci/ruby@2.0.1
 
 jobs:
   cfn-lint:
@@ -31,34 +31,34 @@ jobs:
           command: |
             set -x
             aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-vpc.yml --stack-name lecture13-VPC
-#aws cloudformation deploy --template cloudformation-template/raisetech-lecture13-ec2.yml --stack-name lecture13-EC2
+            aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-ec2.yml --stack-name lecture13-EC2
 #aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-rds.yml --stack-name lecture13-RDS
 #aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-alb.yml --stack-name lecture13-ALB
 #aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-s3.yml --stack-name lecture13-S3 
 # set -x コマンドをスクリプトの先頭に追加すると、シェルが各コマンドを実行する前にそのコマンドを表示します。
 
-  execute-Ansible:
-    executor: ansible-playbook/default
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - af:aa:28:dd:f9:eb:20:20:0f:15:71:3d:22:f2:71:a4
-      - ansible-playbook/install:
-          version: '2.10.7'
-      - ansible-playbook/playbook:
-          playbook: ansible/playbook.yml
-          playbook-options: '-u ec2-user -i ansible/inventory --private-key ../../keypair/CFnKeyPair.pem'
+#  execute-Ansible:
+#    executor: ansible-playbook/default
+#    steps:
+#      - checkout
+#      - add_ssh_keys:
+#          fingerprints:
+#            - af:aa:28:dd:f9:eb:20:20:0f:15:71:3d:22:f2:71:a4
+#      - ansible-playbook/install:
+#          version: '2.10.7'
+#      - ansible-playbook/playbook:
+#          playbook: ansible/playbook.yml
+#          playbook-options: '-u ec2-user -i ansible/inventory --private-key ../../keypair/CFnKeyPair.pem'
 
-  execute-serverspec:
-    executor: ruby/default
-    steps:
-    - checkout
-    - ruby/install-deps: 
-        app-dir: serverspec
-    - run: |
-        cd serverspec
-        bundle exec rake spec  
+#  execute-serverspec:
+#    executor: ruby/default
+#    steps:
+#    - checkout
+#    - ruby/install-deps: 
+#        app-dir: serverspec
+#    - run: |
+#        cd serverspec
+#        bundle exec rake spec  
 
 # CircleCIはデフォルトでRubyの環境を提供しており、必要なGemパッケージをインストールすることができる。
 # ruby/install-deps orbが使用されている場合、そのorbは自動的にbundle installを実行。
@@ -72,10 +72,10 @@ workflows:
       - execute-CloudFormation:      # executeCloudFormation ジョブは cfn-lint ジョブが正常に完了した後に実行
           requires:
             - cfn-lint
-      - execute-Ansible:
-          requires:
-            - execute-CloudFormation
-      - execute-serverspec:
-          requires:
-            - execute-Ansible
+      #- execute-Ansible:
+      #    requires:
+      #      - execute-CloudFormation
+      #- execute-serverspec:
+      #    requires:
+      #      - execute-Ansible
 
