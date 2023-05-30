@@ -3,7 +3,7 @@
     ansible_become_method: sudo
   roles:
     - git
-    #- node.js
+    - node.js
     #- nginx
     #- mysql
     #- yarn
