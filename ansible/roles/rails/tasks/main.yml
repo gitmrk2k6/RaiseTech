@@ -1,0 +1,4 @@
+- name: gem install rails -v 7.0.4
+  shell: bash -lc "gem install rails -v 7.0.4"
+  ignore_errors: true
+  become: true
