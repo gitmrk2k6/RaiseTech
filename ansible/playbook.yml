@@ -2,8 +2,8 @@
   vars:
     ansible_become_method: sudo
   roles:
-    - git
-    - node.js
+    #- git
+    #- node.js
     #- nginx
     #- mysql
     #- yarn
