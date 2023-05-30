@@ -1,0 +1,39 @@
+- name: rbenv rehash
+  shell: bash -lc "/usr/local/rbenv/bin/rbenv rehash"
+  ignore_errors: true
+  become: true
+
+- name: rbenv global 3.1.4
+  shell: bash -lc "/usr/local/rbenv/bin/rbenv global 3.1.4"
+  ignore_errors: true
+  become: true
+
+- name: rbenv exec gem install bundler -v 2.3.14
+  shell: bash -lc "/usr/local/rbenv/bin/rbenv exec gem install bundler"
+  ignore_errors: true
+  become: true
+
+- name: gem update --system
+  shell: bash -lc "gem update --system"
+  ignore_errors: true
+  become: true
+
+- name: gem install nokogiri
+  shell: bash -lc "gem install nokogiri"
+  ignore_errors: true
+  become: true
+
+- name: gem install --no-document rails
+  shell: bash -lc "gem install --no-document rails"
+  ignore_errors: true
+  become: true
+
+
+- name: gem install bundler
+  shell: bash -lc "gem install bundler"
+  ignore_errors: true
+  become: true
+
+- name: source /etc/profile
+  shell: bash -lc "source /etc/profile"
+  become: true

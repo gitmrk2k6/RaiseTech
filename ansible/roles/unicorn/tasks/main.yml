@@ -1,0 +1,29 @@
+- name: Install dependencies
+  yum:
+    name:
+      - gcc
+      - make
+    state: present
+  become: true
+
+- name: Install Unicorn
+  pip:
+    name: unicorn
+    state: present
+  become: true
+
+- name: Configure Unicorn
+  copy:
+    dest: /etc/unicorn.conf
+    content: |
+      # Unicorn configuration file
+      worker_processes 2
+      working_directory /home/ec2-user/raisetech-live8-sample-app
+      listen /tmp/unicorn.sock
+      timeout 30
+      pid /var/run/unicorn.pid
+  become: true
+
+- name: Start Unicorn
+  command: "cd /home/ec2-user/raisetech-live8-sample-app && bundle exec unicorn -c /etc/unicorn.conf"
+  become: true

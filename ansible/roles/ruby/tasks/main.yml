@@ -1,0 +1,42 @@
+- name: git clone rbenv
+  git:
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: /usr/local/rbenv/
+  become: true
+
+- name: git clone ruby-build
+  git:
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: /usr/local/rbenv/plugins/ruby-build/
+  become: true
+
+- name: insert/update /etc/profile env
+  blockinfile:
+    path: /etc/profile
+    block: |
+      export RBENV_ROOT="/usr/local/rbenv"
+      export PATH="${RBENV_ROOT}/bin:${PATH}"
+      eval "$(rbenv init --no-rehash -)"
+  become: true
+
+- name: source /etc/profile
+  shell: bash -lc "source /etc/profile"
+  become: true
+
+- name: rbenv install -v 3.1.4
+  shell: bash -lc "/usr/local/rbenv/bin/rbenv install -v 3.1.4"
+  ignore_errors: true
+  become: true
+
+
+
+# 以下はbundler.railsのmain.ymlに記述
+#- name: rbenv rehash
+#  shell: bash -lc "/usr/local/rbenv/bin/rbenv rehash"
+#  ignore_errors: true
+#  become: true
+
+#- name: rbenv global 3.1.4
+#  shell: bash -lc "/usr/local/rbenv/bin/rbenv global 3.1.4"
+#  ignore_errors: true
+#  become: true
