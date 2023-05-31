@@ -1,11 +1,16 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: EC2-template
 Resources:
+# キーペアの作成
+  CFnKeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: CFnKeyPair
 # EC2の作成 
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      KeyName: CFnKeyPair
+      KeyName: !Ref CFnKeyPair
       DisableApiTermination: false          # 削除保護 
       ImageId: ami-0ffac3e16de16665e
       InstanceType: t2.micro

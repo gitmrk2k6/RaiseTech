@@ -31,7 +31,7 @@ jobs:
           command: |
             set -x
             aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-vpc.yml --stack-name lecture13-VPC
-#aws cloudformation deploy --template cloudformation-template/raisetech-lecture13-ec2.yml --stack-name lecture13-EC2
+            aws cloudformation deploy --template cloudformation-template/raisetech-lecture13-ec2.yml --stack-name lecture13-EC2
 #aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-rds.yml --stack-name lecture13-RDS
 #aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-alb.yml --stack-name lecture13-ALB
 #aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-s3.yml --stack-name lecture13-S3 
@@ -43,7 +43,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - af:aa:28:dd:f9:eb:20:20:0f:15:71:3d:22:f2:71:a4
+            - b3:28:88:18:a9:81:61:40:04:54:0b:9c:2d:fe:52:b3
       - ansible-playbook/install:
           version: '2.10.7'
       - ansible-playbook/playbook:
