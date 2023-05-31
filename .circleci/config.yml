@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@3.1.4
- # ansible-playbook: orbss/ansible-playbook@0.0.5
+  ansible-playbook: orbss/ansible-playbook@0.0.5
  #ruby: circleci/ruby@2.0.1
 
 jobs:
@@ -37,18 +37,18 @@ jobs:
 #aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-s3.yml --stack-name lecture13-S3 
 # set -x コマンドをスクリプトの先頭に追加すると、シェルが各コマンドを実行する前にそのコマンドを表示します。
 
-#  execute-Ansible:
-#    executor: ansible-playbook/default
-#    steps:
-#      - checkout
-#      - add_ssh_keys:
-#          fingerprints:
-#            - 7f:3c:ae:22:8c:d8:64:3d:4d:e6:ee:3d:87:42:d4:b7
-#      - ansible-playbook/install:
-#          version: '2.10.7'
-#      - ansible-playbook/playbook:
-#          playbook: ansible/playbook.yml
-#          playbook-options: '-u ec2-user -i ansible/inventory --private-key ../../keypair/CFnKeyPair.pem'
+  execute-Ansible:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - b3:28:88:18:a9:81:61:40:04:54:0b:9c:2d:fe:52:b3
+      - ansible-playbook/install:
+          version: '2.10.7'
+      - ansible-playbook/playbook:
+          playbook: ansible/playbook.yml
+          playbook-options: '-u ec2-user -i ansible/inventory --private-key ../../keypair/CFnKeyPair.pem'
 
 #  execute-serverspec:
 #    executor: ruby/default
@@ -72,9 +72,9 @@ workflows:
       - execute-CloudFormation:      # executeCloudFormation ジョブは cfn-lint ジョブが正常に完了した後に実行
           requires:
             - cfn-lint
-      #- execute-Ansible:
-      #    requires:
-      #      - execute-CloudFormation
+      - execute-Ansible:
+          requires:
+            - execute-CloudFormation
       #- execute-serverspec:
       #    requires:
       #      - execute-Ansible

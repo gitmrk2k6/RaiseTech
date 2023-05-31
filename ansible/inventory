@@ -1,6 +1,5 @@
 [target]
-13.114.142.155
-
+18.182.62.109
 [target:vars]
 ansible_user=ec2-user
 ansible_ssh_private_key_file="../../keypair/CFnKeyPair.pem"
