@@ -73,3 +73,5 @@
     state: present
     global: yes
   become: true
+  environment:
+    PATH: "/opt/node/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
