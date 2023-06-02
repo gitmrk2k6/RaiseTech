@@ -90,8 +90,6 @@
   changed_when: false
   failed_when: "'rails' not in rails_exists.stdout"
   ignore_errors: true
-  args:
-    executable: /home/ec2-user/.rbenv/shims/gem
   with_items:
     - bash -lc "gem list -e rails"
     - bash -lc "gem list rails"
@@ -101,10 +99,10 @@
   gem:
     name: rails
     version: "{{ rails_version }}"
-    executable: /home/ec2-user/.rbenv/shims/gem
     user_install: no
   timeout: 300
   when: rails_exists is failed
+
 
 
 
