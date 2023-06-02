@@ -1,3 +1,5 @@
+# rbenvインストール
+# git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 - name: install rbenv
   become: true
   git: 
@@ -12,47 +14,67 @@
     owner: ec2-user
     group: ec2-user
 
+# パスを通す
+# echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
 - name: Add rbenv to PATH
   lineinfile: 
     path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
 
+# ~/.bash_profileは、ユーザーのログインシェルで起動時に読み込まれるスクリプトファイル。
+# 提供されたコードは、~/.bash_profileファイルにrbenvの初期化を追加することで、ログインシェル起動時に自動的にrbenvを初期化する。
+# echo 'eval "$(rbenv init -)"' >> ~/.bash_profile 
 - name: eval rbenv init
   lineinfile: 
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
 
+# 環境変数や設定の変更を現在のシェルに反映させる
 - name: rbenv setting
   shell: bash -lc "source ~/.bash_profile"
 
-#ruby-buildのインストール 
+
+# ruby-buildのインストール 
+# git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 - name: install ruby-build
   git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
   become: true
 
-
-
-
-#ruby install 確認
+# rubyがインストールされているか確認
 - name: check ruby installed
   stat:
     path: /home/ec2-user/.rbenv/shims/ruby
   register: ruby_installed
 
-#rubyのインストール
+# インストールされていなければrubyをインストール
 - name: install ruby
   become_user: ec2-user
   shell: bash -lc "rbenv install {{ ruby_version }}"
   when: not ruby_installed.stat.exists
 
-#rubyを使用可能にする
 - name: set default ruby version rehash
   become_user: ec2-user
   shell: bash -lc "rbenv rehash"
 
-#インスタンスで使用するバージョンの設定
+# rbenvは複数のrubyバージョンを管理できるため、システムのデフォルトのバージョンを設定
 - name: set default ruby version
   become_user: ec2-user
   shell: bash -lc "rbenv global {{ ruby_version }}"
+
+- name: check bundler installed
+  shell: bash -lc "bundler version | grep {{ bundler_version }}"
+  register: bundler_exists
+  changed_when: no
+  ignore_errors: true
+
+# bundlerインストール
+- name: bundler install
+  gem: 
+    name: bundler
+    version: "{{ bundler_version }}"
+    executable: "/home/ec2-user/.rbenv/shims/gem"
+    user_install: no
+  timeout: 300
+  when: bundler_exists is failed
