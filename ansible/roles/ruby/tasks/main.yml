@@ -22,7 +22,17 @@
 - name: Add rbenv to PATH
   lineinfile: 
     path: /home/ec2-user/.bash_profile
-    line: 'export PATH="/home/ec2-user/.rbenv/bin:$PATH"'
+    line: 'export PATH="${HOME}/.rbenv/bin:$PATH"'
+- name: Add rbenv to PATH
+  lineinfile: 
+    path: /home/ec2-user/.bash_profile
+    line: 'export RBENV_ROOT="${HOME}/.rbenv"'
+
+
+
+
+
+
 
 # ~/.bash_profileは、ユーザーのログインシェルで起動時に読み込まれるスクリプトファイル。
 # 提供されたコードは、~/.bash_profileファイルにrbenvの初期化を追加することで、ログインシェル起動時に自動的にrbenvを初期化する。
