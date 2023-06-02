@@ -1,13 +1,8 @@
-# rbenvインストール
-# git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 - name: install rbenv
   become: true
   git: 
     repo: https://github.com/sstephenson/rbenv.git 
     dest: /home/ec2-user/.rbenv
-  become_user: ec2-user
-  become_method: sudo
-
 
 - name: edit permission rbenv
   become: true
@@ -17,77 +12,43 @@
     owner: ec2-user
     group: ec2-user
 
-# パスを通す
-# echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
 - name: Add rbenv to PATH
   lineinfile: 
     path: /home/ec2-user/.bash_profile
-    line: 'export PATH="${HOME}/.rbenv/bin:$PATH"'
-- name: Add rbenv to PATH
-  lineinfile: 
-    path: /home/ec2-user/.bash_profile
-    line: 'export RBENV_ROOT="${HOME}/.rbenv"'
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
 
-
-
-
-
-
-
-# ~/.bash_profileは、ユーザーのログインシェルで起動時に読み込まれるスクリプトファイル。
-# 提供されたコードは、~/.bash_profileファイルにrbenvの初期化を追加することで、ログインシェル起動時に自動的にrbenvを初期化する。
-# echo 'eval "$(rbenv init -)"' >> ~/.bash_profile 
 - name: eval rbenv init
   lineinfile: 
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
 
-# 環境変数や設定の変更を現在のシェルに反映させる
-# source .bash_profile
 - name: rbenv setting
   shell: bash -lc "source ~/.bash_profile"
 
-
-
-# ruby-buildのインストール 
-# git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+#ruby-buildのインストール 
 - name: install ruby-build
   git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
-  become: true
 
+#ruby install 確認
+- name: check ruby installed
+  stat:
+    path: /home/ec2-user/.rbenv/shims/ruby
+  register: ruby_installed
 
-
-# rubyがインストールされているか確認
-- name: check ruby install
-  shell: bash -lc "rbenv version | grep {{ ruby_version }}"
-  register: ruby_exists
-  changed_when: no
-  ignore_errors: true
-  become: true
-
-# インストールされていなければrubyをインストール
-- name: ruby install
+#rubyのインストール
+- name: install ruby
+  become_user: ec2-user
   shell: bash -lc "rbenv install {{ ruby_version }}"
-  timeout: 1200
-  when: ruby_exists is failed
-  become: true
+  when: not ruby_installed.stat.exists
 
-# rbenvは複数のrubyバージョンを管理できるため、システムのデフォルトのバージョンを設定
-- name: check rbenv global
-  shell: bash -lc "rbenv version | grep {{ ruby_version }}"
-  register: rbenv_default
-  changed_when: False
-  ignore_errors: True
-  become: true
-
-- name: set rbenv global
-  shell: bash -lc "rbenv global {{ ruby_version }}"
-  when: rbenv_default is failed
-  become: true
-
-- name: rbenv rehash
+#rubyを使用可能にする
+- name: set default ruby version rehash
+  become_user: ec2-user
   shell: bash -lc "rbenv rehash"
-  when: rbenv_default is failed
-  become: true
+
+#インスタンスで使用するバージョンの設定
+- name: set default ruby version
+  become_user: ec2-user
+  shell: bash -lc "rbenv global {{ ruby_version }}"
