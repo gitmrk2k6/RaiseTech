@@ -3,12 +3,12 @@
     ansible_become_method: sudo
   roles:
     - git
-    #- node.js
+    - node.js-yarn
+    - ruby
     #- nginx
     #- mysql
     #- yarn
     #- application
-    #- ruby
     #- bundler
     #- rails
     #- unicorn
