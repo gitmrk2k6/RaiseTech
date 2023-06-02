@@ -20,6 +20,13 @@
     name: mysql-community-client.x86_64
     state: present
 
+- name: Start MySQL service
+  become: true
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+
 
 
 # mysql本体をインストール
