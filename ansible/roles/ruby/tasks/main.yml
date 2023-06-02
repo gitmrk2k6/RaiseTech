@@ -34,6 +34,7 @@
   shell: bash -lc "source ~/.bash_profile"
 
 
+
 # ruby-buildのインストール 
 # git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 - name: install ruby-build
@@ -63,6 +64,8 @@
   become_user: ec2-user
   shell: bash -lc "rbenv global {{ ruby_version }}"
 
+
+
 # bundlerがインストールされているか確認
 - name: check bundler installed
   shell: /home/ec2-user/.rbenv/shims/bundler --version
@@ -77,6 +80,34 @@
     version: "{{ bundler_version }}"
     user_install: no
   when: bundler_check.rc != 0
+
+
+
+# railsがインストールされているか確認
+- name: check rails install
+  command: "{{ item }}"
+  register: rails_exists
+  changed_when: false
+  failed_when: "'rails' not in rails_exists.stdout"
+  ignore_errors: true
+  args:
+    executable: /home/ec2-user/.rbenv/shims/gem
+  with_items:
+    - bash -lc "gem list -e rails"
+    - bash -lc "gem list rails"
+
+# railsインストール
+- name: rails install
+  gem:
+    name: rails
+    version: "{{ rails_version }}"
+    executable: /home/ec2-user/.rbenv/shims/gem
+    user_install: no
+  timeout: 300
+  when: rails_exists is failed
+
+
+
 
 
 
@@ -95,4 +126,22 @@
 #    executable: "/home/ec2-user/.rbenv/shims/gem"
 #    user_install: no
 #  timeout: 300
-#  when: bundler_exists is failed
+#  when: bundler_exists is faile
+
+
+# railsがインストールされているか確認
+#- name: check rails install
+#  shell: bash -lc "gem list -e rails | grep {{ rails_version }}"
+#  register: rails_exists
+#  changed_when: no
+#  ignore_errors: true
+
+# railsインストール
+#- name: rails install
+#  gem: 
+#    name: rails
+#    version: "{{ rails_version }}"
+#    executable: "/home/ec2-user/.rbenv/shims/gem"
+#    user_install: no
+#  timeout: 300
+#  when: rails_exists is failed
