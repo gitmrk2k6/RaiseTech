@@ -30,6 +30,7 @@
   git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
+  become: true
 
 
 
