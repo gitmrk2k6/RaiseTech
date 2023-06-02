@@ -5,12 +5,9 @@
     - git
     - node.js-yarn
     - ruby
-    #- nginx
-    #- mysql
-    #- yarn
+    - mysql
     #- application
-    #- bundler
-    #- rails
+    #- nginx
     #- unicorn
 
 
