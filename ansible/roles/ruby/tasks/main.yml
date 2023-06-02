@@ -63,18 +63,36 @@
   become_user: ec2-user
   shell: bash -lc "rbenv global {{ ruby_version }}"
 
+# bundlerがインストールされているか確認
 - name: check bundler installed
-  shell: bash -lc "bundler version | grep {{ bundler_version }}"
-  register: bundler_exists
-  changed_when: no
-  ignore_errors: true
+  shell: /home/ec2-user/.rbenv/shims/bundler --version
+  register: bundler_check
+  changed_when: false
+  failed_when: false
 
 # bundlerインストール
 - name: bundler install
-  gem: 
+  gem:
     name: bundler
     version: "{{ bundler_version }}"
-    executable: "/home/ec2-user/.rbenv/shims/gem"
     user_install: no
-  timeout: 300
-  when: bundler_exists is failed
+  when: bundler_check.rc != 0
+
+
+
+
+#- name: check bundler installed
+#  shell: bash -lc "bundler version | grep {{ bundler_version }}"
+#  register: bundler_exists
+#  changed_when: no
+#  ignore_errors: true
+
+# bundlerインストール
+#- name: bundler install
+#  gem: 
+#    name: bundler
+#    version: "{{ bundler_version }}"
+#    executable: "/home/ec2-user/.rbenv/shims/gem"
+#    user_install: no
+#  timeout: 300
+#  when: bundler_exists is failed
