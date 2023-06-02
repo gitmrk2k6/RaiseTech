@@ -13,7 +13,7 @@
 - name: Add rbenv to PATH
   lineinfile: 
     path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    line: 'export PATH="/home/ec2-user/.rbenv/bin:$PATH"'
 
 # ~/.bash_profileは、ユーザーのログインシェルで起動時に読み込まれるスクリプトファイル。
 # 提供されたコードは、~/.bash_profileファイルにrbenvの初期化を追加することで、ログインシェル起動時に自動的にrbenvを初期化する。
@@ -27,6 +27,17 @@
 # source .bash_profile
 - name: rbenv setting
   shell: bash -lc "source ~/.bash_profile"
+
+
+
+- name: rbenv rehash
+  shell: bash -lc "rbenv rehash"
+  when: rbenv_default is failed
+  become: true
+
+
+
+
 
 # ruby-buildのインストール 
 # git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
