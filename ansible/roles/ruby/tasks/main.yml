@@ -30,11 +30,11 @@
 
 
 
+
 - name: rbenv rehash
   shell: bash -lc "rbenv rehash"
-  when: rbenv_default is failed
+  when: rbenv_default.failed
   become: true
-
 
 
 
