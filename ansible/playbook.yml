@@ -4,11 +4,11 @@
   roles:
     - git
     - node.js-yarn
+    - ruby
     #- nginx
     #- mysql
     #- yarn
     #- application
-    #- ruby
     #- bundler
     #- rails
     #- unicorn
