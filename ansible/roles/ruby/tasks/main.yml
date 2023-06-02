@@ -1,42 +1,68 @@
-- name: git clone rbenv
-  git:
-    repo: https://github.com/sstephenson/rbenv.git
-    dest: /usr/local/rbenv/
+# rbenvインストール
+# git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+- name: install rbenv
   become: true
+  git: 
+    repo: https://github.com/sstephenson/rbenv.git 
+    dest: /home/ec2-user/.rbenv
 
-- name: git clone ruby-build
+# パスを通す
+# echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
+- name: Add rbenv to PATH
+  lineinfile: 
+    path: /home/ec2-user/.bash_profile
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+
+# ~/.bash_profileは、ユーザーのログインシェルで起動時に読み込まれるスクリプトファイル。
+# 提供されたコードは、~/.bash_profileファイルにrbenvの初期化を追加することで、ログインシェル起動時に自動的にrbenvを初期化する。
+# echo 'eval "$(rbenv init -)"' >> ~/.bash_profile 
+- name: eval rbenv init
+  lineinfile: 
+    path: /home/ec2-user/.bash_profile
+    line: 'eval "$(rbenv init -)"'
+
+# 環境変数や設定の変更を現在のシェルに反映させる
+# source .bash_profile
+- name: rbenv setting
+  shell: bash -lc "source ~/.bash_profile"
+
+# ruby-buildのインストール 
+# git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+- name: install ruby-build
   git:
     repo: https://github.com/sstephenson/ruby-build.git
-    dest: /usr/local/rbenv/plugins/ruby-build/
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
   become: true
 
-- name: insert/update /etc/profile env
-  blockinfile:
-    path: /etc/profile
-    block: |
-      export RBENV_ROOT="/usr/local/rbenv"
-      export PATH="${RBENV_ROOT}/bin:${PATH}"
-      eval "$(rbenv init --no-rehash -)"
-  become: true
-
-- name: source /etc/profile
-  shell: bash -lc "source /etc/profile"
-  become: true
-
-- name: rbenv install -v 3.1.4
-  shell: bash -lc "/usr/local/rbenv/bin/rbenv install -v 3.1.4"
+# rubyがインストールされているか確認
+- name: check ruby install
+  shell: bash -lc "rbenv version | grep {{ ruby_version }}"
+  register: ruby_exists
+  changed_when: no
   ignore_errors: true
   become: true
 
+# インストールされていなければrubyをインストール
+- name: ruby install
+  shell: bash -lc "rbenv install {{ ruby_version }}"
+  timeout: 1200
+  when: ruby_exists is failed
+  become: true
 
+# rbenvは複数のrubyバージョンを管理できるため、システムのデフォルトのバージョンを設定
+- name: check rbenv global
+  shell: bash -lc "rbenv version | grep {{ ruby_version }}"
+  register: rbenv_default
+  changed_when: False
+  ignore_errors: True
+  become: true
 
-# 以下はbundler.railsのmain.ymlに記述
-#- name: rbenv rehash
-#  shell: bash -lc "/usr/local/rbenv/bin/rbenv rehash"
-#  ignore_errors: true
-#  become: true
+- name: set rbenv global
+  shell: bash -lc "rbenv global {{ ruby_version }}"
+  when: rbenv_default is failed
+  become: true
 
-#- name: rbenv global 3.1.4
-#  shell: bash -lc "/usr/local/rbenv/bin/rbenv global 3.1.4"
-#  ignore_errors: true
-#  become: true
+- name: rbenv rehash
+  shell: bash -lc "rbenv rehash"
+  when: rbenv_default is failed
+  become: true
