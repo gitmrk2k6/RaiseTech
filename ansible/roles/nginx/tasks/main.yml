@@ -1,12 +1,11 @@
-
 - name: Check if nginx is already installed
-  command: nginx -v
+  command: /usr/sbin/nginx -v
   register: nginx_version
   changed_when: false
   ignore_errors: true
   become: true
 
-- name: install the latest version of nginx
+- name: install the latest version of nginx 
   command: amazon-linux-extras install nginx1 -y
   become: true
   when: nginx_version.rc != 0
@@ -16,15 +15,4 @@
     name: nginx
     state: started
     enabled: yes
-  become: true
-  when: "'nginx1' in ansible_facts.packages"
-
-- name: get nginx install version
-  command: /usr/sbin/nginx -v
-  register: nginx_install_version
-  become: true
-
-- name: get status of nginx service
-  command: systemctl status nginx
-  register: nginx_service_status
   become: true
