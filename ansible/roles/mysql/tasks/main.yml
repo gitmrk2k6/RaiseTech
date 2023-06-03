@@ -36,6 +36,7 @@
 - name: Start MySQL service
   become: true
   service:
-    name: mysql
+    name: mysqld
     state: started
     enabled: yes
+
