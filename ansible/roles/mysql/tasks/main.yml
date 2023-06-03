@@ -19,14 +19,12 @@
     state: present
     key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
 
-
 # mysql本体をインストール
 - name: Install MySQL community server
   become: true
   yum:
     name: mysql-community-server
     state: present
-
 
 # mysqlクライアントインストール
 #- name: install mysql-community-client.x86_64
