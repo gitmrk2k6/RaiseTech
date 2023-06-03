@@ -6,8 +6,7 @@
     - node.js-yarn
     - ruby
     - mysql
-    - application
+    - application-unicorn
     #- nginx
-    #- unicorn
-
+    
 
