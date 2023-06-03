@@ -13,6 +13,6 @@
 
 # unicornインストール
 - name: bundle install
-  shell: bundle install
+  shell: bash -lc "bundle install"
   args: 
     chdir: /home/ec2-user/raisetech-live8-sample-app/
