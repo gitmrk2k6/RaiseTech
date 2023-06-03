@@ -41,13 +41,3 @@
     name: mysql
     state: started
     enabled: yes
-
-
-
-# mysql本体をインストール
-#- name: Install MySQL community server
-#  become: true
-#  yum:
-#    name: mysql-community-server
-#    state: present
-
