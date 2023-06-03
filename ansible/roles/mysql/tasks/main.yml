@@ -1,4 +1,5 @@
 # mysqlのインストール
+
 # MariaDBの削除
 - name: Remove MariaDB
   become: true
@@ -26,13 +27,6 @@
     name: mysql-community-server
     state: present
 
-# mysqlクライアントインストール
-#- name: install mysql-community-client.x86_64
-#  become: true
-#  yum:
-#    name: mysql-community-client.x86_64
-#    state: present
-
 - name: Start MySQL service
   become: true
   service:
@@ -40,3 +34,14 @@
     state: started
     enabled: yes
 
+
+
+
+
+
+# mysqlクライアントインストール(インストールはできたがサーバの起動がうまくいかなかった)
+#- name: install mysql-community-client.x86_64
+#  become: true
+#  yum:
+#    name: mysql-community-client.x86_64
+#    state: present
