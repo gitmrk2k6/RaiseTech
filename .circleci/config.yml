@@ -32,9 +32,9 @@ jobs:
             set -x
             aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-vpc.yml --stack-name lecture13-VPC
             aws cloudformation deploy --template cloudformation-template/raisetech-lecture13-ec2.yml --stack-name lecture13-EC2
-#aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-rds.yml --stack-name lecture13-RDS
-#aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-alb.yml --stack-name lecture13-ALB
-#aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-s3.yml --stack-name lecture13-S3 
+            aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-rds.yml --stack-name lecture13-RDS
+            aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-alb.yml --stack-name lecture13-ALB
+            aws cloudformation deploy --template cloudformation-template/raisetech-lecture10-s3.yml --stack-name lecture13-S3 
 # set -x コマンドをスクリプトの先頭に追加すると、シェルが各コマンドを実行する前にそのコマンドを表示します。
 
   execute-Ansible:
