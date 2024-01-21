@@ -6,6 +6,10 @@
 - 各講義で出題された課題はマークダウンファイルにまとめて提出しました。  
 （例）第10回目の講義課題 → lecture10.md
 
+## 最終課題終了時のAWS構成図
+
+![picture](./images/diagram.png)
+
 ## 作成ファイルおよび内容
 
 | 　File Name   | Contents |
